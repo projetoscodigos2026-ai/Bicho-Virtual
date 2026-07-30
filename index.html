@@ -25,40 +25,48 @@
 <title>Diamante Vivo 💎</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Rajdhani:wght@500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
 <style>
-:root{ --bg-deep:#050810; --bg-panel:#0c1424; --cyan:#00e5ff; --violet:#7b5cff; --amber:#ffb300; --danger:#ff3d5a; --success:#00e676; --glass:rgba(120,180,255,0.06); --glass-border:rgba(0,229,255,0.28); --text:#eaf6ff; --text-dim:#6f84a8; --lcd-bg:#9daa86; --font-display:'Orbitron',sans-serif; --font-body:'Rajdhani',sans-serif; --font-mono:'IBM Plex Mono',monospace; }
+:root{ --bg-deep:#050810; --bg-panel:#0c1424; --cyan:#00e5ff; --violet:#7b5cff; --amber:#ffb300; --danger:#ff3d5a; --success:#00e676; --glass:rgba(120,180,255,0.06); --glass-border:rgba(0,229,255,0.28); --text:#eaf6ff; --text-dim:#6f84a8; --font-display:'Orbitron',sans-serif; --font-body:'Rajdhani',sans-serif; --font-mono:'IBM Plex Mono',monospace; }
 *{margin:0;padding:0;box-sizing:border-box;touch-action:manipulation;-webkit-tap-highlight-color:transparent;} html,body{height:100%;}
 body{ font-family:var(--font-body); background: radial-gradient(circle at 20% 0%, rgba(123,92,255,0.16), transparent 45%), radial-gradient(circle at 85% 15%, rgba(0,229,255,0.12), transparent 40%), var(--bg-deep); color:var(--text); min-height:100vh; display:flex; flex-direction:column; max-width:520px; margin:0 auto; overflow-x:hidden; }
 .hud{ padding:14px 14px 10px; z-index:5; } .hud-top{ display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
 .brand{ font-family:var(--font-display); font-size:13px; letter-spacing:2px; color:var(--cyan); text-shadow:0 0 12px rgba(0,229,255,0.6); display:flex; align-items:center; gap:8px; }
 .pet-name-btn{ font-family:var(--font-body); font-weight:700; font-size:13px; color:var(--text-dim); background:var(--glass); border:1px solid var(--glass-border); padding:6px 12px; border-radius:20px; cursor:pointer; }
-.stat-row{ display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
-.stat-card{ background:var(--glass); border:1px solid var(--glass-border); border-radius:12px; padding:8px 10px; clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px); position:relative; overflow:hidden; }
-.stat-label{font-size:9px;letter-spacing:1.5px;color:var(--text-dim);text-transform:uppercase;} .stat-value{font-family:var(--font-mono);font-size:15px;font-weight:600;}
+.stat-row{ display:grid; grid-template-columns:repeat(5,1fr); gap:6px; }
+.stat-card{ background:var(--glass); border:1px solid var(--glass-border); border-radius:10px; padding:6px 5px; clip-path:polygon(6px 0,100% 0,100% calc(100% - 6px),calc(100% - 6px) 100%,0 100%,0 6px); position:relative; overflow:hidden; }
+.stat-label{font-size:8px;letter-spacing:1px;color:var(--text-dim);text-transform:uppercase;white-space:nowrap;} .stat-value{font-family:var(--font-mono);font-size:13px;font-weight:600;}
 .bar-track{height:4px;background:rgba(255,255,255,0.08);border-radius:2px;margin-top:5px;overflow:hidden;} .bar-fill{height:100%;border-radius:2px;transition:width .4s ease;}
-.stage{ flex:1; position:relative; display:flex; align-items:center; justify-content:center; min-height:280px; }
+.stage{ flex:1; position:relative; display:flex; align-items:center; justify-content:center; min-height:280px; transition:opacity .2s ease; }
+.stage.hidden-for-roam{ opacity:0; pointer-events:none; }
 .capsule{ position:relative; width:230px; height:230px; display:flex; align-items:center; justify-content:center; }
 .facet-ring{ position:absolute;inset:0; clip-path:polygon(50% 0%,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%); border:2px solid var(--glass-border); background:linear-gradient(160deg,rgba(0,229,255,0.07),rgba(123,92,255,0.05)); animation:spin 18s linear infinite; box-shadow:0 0 40px rgba(0,229,255,0.15) inset, 0 0 30px rgba(123,92,255,0.15); }
 .facet-ring.evolving{ border-color:var(--amber); box-shadow:0 0 60px rgba(255,179,0,0.6) inset,0 0 40px rgba(255,179,0,0.6); animation:spin 1s linear infinite, evoPulse .4s infinite; }
+.facet-ring.alarm{ border-color:var(--danger); }
 @keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}} @keyframes evoPulse{50%{filter:brightness(1.8)}}
 .scanline{ position:absolute;left:10%;right:10%;height:2px; background:linear-gradient(90deg,transparent,var(--cyan),transparent); opacity:.6; animation:scan 3.2s ease-in-out infinite; } @keyframes scan{0%{top:20%}50%{top:80%}100%{top:20%}}
 .pet-wrap{position:relative;z-index:2;text-align:center;} .lcd-shell{ width:172px;height:172px; background:linear-gradient(155deg,#1c2230,#0a0e16); border-radius:22px; padding:10px; box-shadow:0 0 0 1px rgba(0,229,255,0.15), 0 10px 30px rgba(0,0,0,0.5); cursor:pointer; }
-.lcd-screen{ width:100%;height:100%; background:var(--lcd-bg); border-radius:10px; display:flex;align-items:center;justify-content:center; position:relative; overflow:hidden; }
-#petCanvas{image-rendering:pixelated;} .evo-overlay{position:absolute;inset:0;background:radial-gradient(circle,rgba(255,179,0,.85),rgba(123,92,255,.85));display:none;align-items:center;justify-content:center;font-family:var(--font-display);font-size:14px;color:#fff;z-index:10;border-radius:10px} .evo-overlay.show{display:flex}
+.lcd-screen{ width:100%;height:100%; background:radial-gradient(circle,#232c40,#141a28); border-radius:10px; display:flex;align-items:center;justify-content:center; position:relative; overflow:hidden; }
+#petImg{ width:140px;height:140px; image-rendering:pixelated; display:block; transition:transform .18s ease; filter:drop-shadow(0 6px 10px rgba(0,0,0,.55)); }
+#petImg.bounce{ transform:translateY(-7px); } #petImg.sick{ animation:shake .28s infinite; } @keyframes shake{0%,100%{transform:translateX(-3px)}50%{transform:translateX(3px)}}
+.pet-placeholder{ font-size:52px; display:none; filter:drop-shadow(0 0 12px rgba(0,229,255,.65)); }
+.evo-overlay{position:absolute;inset:0;background:radial-gradient(circle,rgba(255,179,0,.85),rgba(123,92,255,.85));display:none;align-items:center;justify-content:center;font-family:var(--font-display);font-size:14px;color:#fff;z-index:10;border-radius:10px} .evo-overlay.show{display:flex}
 .status-chip{ margin-top:6px; font-family:var(--font-mono); font-size:11px; color:var(--text-dim); letter-spacing:1px; }
 .floating-msg{ position:absolute; font-family:var(--font-display); font-size:15px; font-weight:700; pointer-events:none; animation:floatUp 1.4s forwards; z-index:20; white-space:nowrap; } @keyframes floatUp{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-60px)}}
 .dock{ background:linear-gradient(180deg,rgba(12,20,36,0.4),var(--bg-panel)); border-top:1px solid var(--glass-border); padding:12px 10px 16px; z-index:5; } .dock-scroll{display:flex;gap:10px;overflow-x:auto;}
 .action-btn{ position:relative; flex:0 0 64px; height:68px; border:1px solid var(--glass-border); background:var(--glass); border-radius:14px; display:flex;flex-direction:column;align-items:center;justify-content:center; cursor:pointer; color:var(--text); }
+.action-btn.active{ border-color:var(--cyan); box-shadow:0 0 12px rgba(0,229,255,.5); background:rgba(0,229,255,0.1); }
 .action-icon{font-size:22px;margin-bottom:4px;} .action-label{font-size:10px;font-weight:600;color:var(--text-dim);} .badge{ position:absolute;top:-4px;right:-4px; background:var(--danger);color:#fff; font-family:var(--font-mono);font-size:9px;font-weight:700; padding:2px 5px;border-radius:8px;min-width:16px;text-align:center; }
 .modal{ display:none;position:fixed;inset:0; background:rgba(2,5,12,0.75); backdrop-filter:blur(3px); z-index:1000; align-items:flex-end;justify-content:center; } .modal.show{display:flex;} .modal-content{ width:100%;max-width:520px;max-height:82vh; background:var(--bg-panel); border:1px solid var(--glass-border); border-bottom:none; border-radius:22px 22px 0 0; padding:20px; overflow-y:auto; animation:slideUp .28s ease; } @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
 .modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;} .modal-title{font-family:var(--font-display);font-size:16px;color:var(--cyan);} .close-btn{background:none;border:none;font-size:22px;color:var(--text-dim);cursor:pointer;}
 .grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;} .tile{ background:var(--glass);border:1px solid var(--glass-border);border-radius:14px; padding:14px;text-align:center;cursor:pointer; } .tile-icon{font-size:32px;} .tile-name{font-weight:700;font-size:14px;} .tile-sub{font-family:var(--font-mono);font-size:11px;color:var(--success);}
 .shop-row{display:flex;align-items:center;gap:12px;background:var(--glass);border:1px solid var(--glass-border);border-radius:14px;padding:12px;margin-bottom:10px;} .shop-icon{font-size:30px;} .shop-info{flex:1;} .shop-name{font-weight:700;font-size:14px;} .shop-price{font-family:var(--font-mono);color:var(--amber);font-size:12px;} .buy-btn{background:linear-gradient(135deg,var(--cyan),var(--violet));border:none;color:#04101c;font-weight:700;padding:8px 16px;border-radius:20px;font-size:12px;cursor:pointer;} .buy-btn:disabled{background:#26324a;color:var(--text-dim);}
 .pet-cat{display:flex;gap:8px;margin-bottom:14px;overflow-x:auto;} .pet-cat button{ font-weight:700;font-size:12px; background:var(--glass);border:1px solid var(--glass-border);color:var(--text-dim); padding:6px 12px;border-radius:16px;white-space:nowrap;cursor:pointer; } .pet-cat button.active{background:linear-gradient(135deg,var(--cyan),var(--violet));color:#04101c;}
-.pet-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;} .pet-opt{background:var(--glass);border:2px solid transparent;border-radius:12px;padding:6px 4px;text-align:center;cursor:pointer;} .pet-opt.selected{border-color:var(--cyan);background:rgba(0,229,255,0.1);} .pet-opt canvas{display:block;margin:0 auto;background:var(--lcd-bg);border-radius:6px;image-rendering:pixelated;} .pet-opt-name{font-size:9px;color:var(--text-dim);margin-top:3px;display:block;}
+.pet-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;} .pet-opt{background:var(--glass);border:2px solid transparent;border-radius:12px;padding:6px 4px;text-align:center;cursor:pointer;} .pet-opt.selected{border-color:var(--cyan);background:rgba(0,229,255,0.1);} .pet-opt img{display:block;margin:0 auto;width:48px;height:48px;background:#141a28;border-radius:6px;image-rendering:pixelated;} .pet-opt-name{font-size:9px;color:var(--text-dim);margin-top:3px;display:block;}
 .letter-card{background:linear-gradient(150deg,rgba(255,179,0,0.12),rgba(123,92,255,0.08));border:1px solid var(--glass-border);border-radius:16px;padding:22px;text-align:center;} .letter-emoji{font-size:46px;margin-bottom:10px;} .letter-text{font-size:15px;line-height:1.5;margin-bottom:16px;} .claim-btn{background:var(--success);border:none;color:#04180c;font-weight:700;padding:10px 28px;border-radius:22px;cursor:pointer;}
 .code-group{display:flex;gap:8px;margin-bottom:14px;} .code-input{flex:1;background:var(--glass);border:1px solid var(--glass-border);color:var(--text); padding:12px;border-radius:12px;font-family:var(--font-mono);font-size:16px;text-align:center;letter-spacing:3px;text-transform:uppercase;} .code-submit{background:linear-gradient(135deg,var(--cyan),var(--violet));border:none;color:#04101c;font-weight:700;padding:0 20px;border-radius:12px;cursor:pointer;}
 .code-result{padding:12px;border-radius:12px;text-align:center;font-weight:700;font-size:13px;} .code-success{background:rgba(0,230,118,0.15);color:var(--success);} .code-error{background:rgba(255,61,90,0.15);color:var(--danger);}
-.game-canvas{width:100%;height:260px;border-radius:16px;background:#020509;border:1px solid var(--glass-border);} .game-hud{display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:12px;color:var(--text-dim);margin:10px 0;} .game-msg{text-align:center;font-family:var(--font-display);font-size:13px;color:var(--cyan);margin-top:10px;} .start-btn{width:100%;margin-top:12px;background:linear-gradient(135deg,var(--cyan),var(--violet));border:none;color:#04101c;font-weight:700;padding:12px;border-radius:14px;cursor:pointer;}
+.game-wrap{position:relative;} .game-canvas{width:100%;height:260px;border-radius:16px;background:#020509;border:1px solid var(--glass-border);display:block;} .game-pet{position:absolute;bottom:6px;width:56px;height:56px;image-rendering:pixelated;pointer-events:none;transform:translateX(-50%);filter:drop-shadow(0 4px 8px rgba(0,0,0,.6));}
+.game-hud{display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:12px;color:var(--text-dim);margin:10px 0;} .game-msg{text-align:center;font-family:var(--font-display);font-size:13px;color:var(--cyan);margin-top:10px;} .start-btn{width:100%;margin-top:12px;background:linear-gradient(135deg,var(--cyan),var(--violet));border:none;color:#04101c;font-weight:700;padding:12px;border-radius:14px;cursor:pointer;}
+#roamPet{ position:fixed; width:104px; height:104px; image-rendering:pixelated; filter:drop-shadow(0 10px 16px rgba(0,0,0,.6)) drop-shadow(0 0 14px rgba(0,229,255,.35)); left:50%; top:50%; transform:translate(-50%,-50%); display:none; z-index:900; touch-action:manipulation; }
 </style>
 </head>
 <body>
@@ -68,6 +76,7 @@ body{ font-family:var(--font-body); background: radial-gradient(circle at 20% 0%
   <div class="stat-row">
     <div class="stat-card"><div class="stat-label">Fome</div><div class="stat-value" id="fomeVal">00</div><div class="bar-track"><div class="bar-fill" id="fomeBar" style="background:var(--amber);width:0%"></div></div></div>
     <div class="stat-card"><div class="stat-label">Carinho</div><div class="stat-value" id="carinhoVal">0%</div><div class="bar-track"><div class="bar-fill" id="carinhoBar" style="background:var(--success);width:0%"></div></div></div>
+    <div class="stat-card"><div class="stat-label">Feliz</div><div class="stat-value" id="felizVal">0%</div><div class="bar-track"><div class="bar-fill" id="felizBar" style="background:var(--danger);width:0%"></div></div></div>
     <div class="stat-card"><div class="stat-label">Evo</div><div class="stat-value" id="evoVal">Lv1</div><div class="bar-track"><div class="bar-fill" id="evoBar" style="background:var(--violet);width:100%"></div></div></div>
     <div class="stat-card"><div class="stat-label">Moedas</div><div class="stat-value" id="moedasVal">0</div><div class="bar-track"><div class="bar-fill" style="background:var(--cyan);width:100%"></div></div></div>
   </div>
@@ -76,11 +85,17 @@ body{ font-family:var(--font-body); background: radial-gradient(circle at 20% 0%
 <div class="stage" id="stage">
   <div class="capsule"><div class="facet-ring" id="facetRing"></div><div class="scanline"></div>
     <div class="pet-wrap">
-      <div class="lcd-shell" id="lcdShell"><div class="lcd-screen"><canvas id="petCanvas" width="160" height="160"></canvas><div class="evo-overlay" id="evoOverlay">EVOLUINDO...</div></div></div>
+      <div class="lcd-shell" id="lcdShell"><div class="lcd-screen">
+        <img id="petImg" src="" alt="bichinho">
+        <div class="pet-placeholder" id="petPlaceholder">💎</div>
+        <div class="evo-overlay" id="evoOverlay">EVOLUINDO...</div>
+      </div></div>
       <div class="status-chip" id="statusChip">estável</div>
     </div>
   </div>
 </div>
+
+<img id="roamPet" src="" alt="bichinho andando">
 
 <div class="dock" id="dock"><div class="dock-scroll">
   <button class="action-btn" id="btnFood">🍔<span class="action-label">Comida</span></button>
@@ -90,56 +105,71 @@ body{ font-family:var(--font-body); background: radial-gradient(circle at 20% 0%
   <button class="action-btn" id="btnMed">💉<span class="action-label">Remédio</span><span class="badge" id="sickBadge" style="display:none">!</span></button>
   <button class="action-btn" id="btnMail">✉️<span class="action-label">Correio</span><span class="badge" id="mailBadge" style="display:none">1</span></button>
   <button class="action-btn" id="btnCodes">🔑<span class="action-label">Códigos</span></button>
+  <button class="action-btn" id="btnWalk">🚶<span class="action-label">Andar</span></button>
 </div></div>
 
 <div class="modal" id="modal-food"><div class="modal-content"><div class="modal-header"><span class="modal-title">🍔 ALIMENTAR</span><button class="close-btn" data-close="food">×</button></div><div class="grid2" id="foodGrid"></div></div></div>
 <div class="modal" id="modal-shop"><div class="modal-content"><div class="modal-header"><span class="modal-title">🛍️ LOJA</span><button class="close-btn" data-close="shop">×</button></div><div id="shopList"></div></div></div>
-<div class="modal" id="modal-game"><div class="modal-content"><div class="modal-header"><span class="modal-title">🕹️ CAÇA-BYTES</span><button class="close-btn" data-close="game">×</button></div><canvas class="game-canvas" id="gameCanvas"></canvas><div class="game-hud"><span id="gameScore">Pontos: 0</span><span id="gameTime">Tempo: 20s</span></div><div class="game-msg" id="gameMsg">Arraste para mover o bichinho e pegue os itens.</div><button class="start-btn" id="gameStartBtn">Começar</button></div></div>
+<div class="modal" id="modal-game"><div class="modal-content"><div class="modal-header"><span class="modal-title">🕹️ CAÇA-BYTES</span><button class="close-btn" data-close="game">×</button></div><div class="game-wrap"><canvas class="game-canvas" id="gameCanvas"></canvas><img class="game-pet" id="gamePetImg" src="" alt=""></div><div class="game-hud"><span id="gameScore">Pontos: 0</span><span id="gameTime">Tempo: 20s</span></div><div class="game-msg" id="gameMsg">Arraste para mover o bichinho e pegue os itens.</div><button class="start-btn" id="gameStartBtn">Começar</button></div></div>
 <div class="modal" id="modal-mail"><div class="modal-content"><div class="modal-header"><span class="modal-title">✉️ CORREIO</span><button class="close-btn" data-close="mail">×</button></div><div id="mailBody"></div></div></div>
 <div class="modal" id="modal-codes"><div class="modal-content"><div class="modal-header"><span class="modal-title">🔑 CÓDIGOS</span><button class="close-btn" data-close="codes">×</button></div><div class="code-group"><input class="code-input" id="codeInput" maxlength="12" placeholder="XXXX-XXXX"><button class="code-submit" id="codeSubmit">OK</button></div><div id="codeResult"></div></div></div>
 <div class="modal" id="modal-selector"><div class="modal-content"><div class="modal-header"><span class="modal-title">💎 ESCOLHER BICHINHO</span><button class="close-btn" data-close="selector">×</button></div><div class="pet-cat" id="petCatBar"></div><div class="pet-grid" id="petGrid"></div></div></div>
 
 <script type="module">
-import { PETS, SPRITES, CAT_LABELS, findPet, petSpriteBitmap } from './personagens.js';
+import { PETS, CAT_LABELS, findPet } from './personagens.js';
 
 const FOODS = [ {id:'sushi',name:'Sushi',icon:'🍣',fome:-30,carinho:8},{id:'bolo',name:'Bolo',icon:'🍰',fome:-22,carinho:10},{id:'maca',name:'Maçã',icon:'🍎',fome:-12,carinho:5},{id:'ramen',name:'Ramen',icon:'🍜',fome:-28,carinho:7},{id:'pizza',name:'Pizza',icon:'🍕',fome:-25,carinho:8},{id:'sorvete',name:'Sorvete',icon:'🍦',fome:-15,carinho:6}, ];
 const SHOP = [ {id:'chapeu',name:'Chapéu Holográfico',icon:'🎩',price:40},{id:'oculos',name:'Óculos Cyber',icon:'🕶️',price:35},{id:'aura',name:'Aura Diamante',icon:'✨',price:80},{id:'capa',name:'Capa Neon',icon:'🧣',price:50},{id:'coroa',name:'Coroa de Bytes',icon:'👑',price:120}, ];
 const LETTERS = [ {emoji:'💌',text:'Transmissão criptografada com moedas.',coins:15},{emoji:'📦',text:'Pacote de manutenção com moedas extras.',coins:25},{emoji:'🎉',text:'Aniversário do seu bichinho! Bônus chegou.',coins:30},{emoji:'⚠️',text:'Só confete digital dessa vez.',coins:0}, ];
 const CODES = { 'DIAMANTE': {msg:'Código mestre +100 moedas.', coins:100}, 'PENDRIVE': {msg:'Comida secreta +20 moedas!', coins:20}, 'ALMA2026': {msg:'Bônus laboratório +50 moedas!', coins:50}, };
 
-const SAVE_KEY='diamante-vivo-save-v2';
-function defaultState(){ return { petId:null, estagio:0, fome:20, carinho:0, felicidade:80, doente:false, poop:false, coins:30, bornAt:Date.now(), lastTick:Date.now(), mailPending:true, itemsOwned:[], }; }
+const SAVE_KEY='diamante-vivo-save-v3';
+function defaultState(){ return { petId:null, estagio:0, fome:20, carinho:0, felicidade:80, doente:false, poop:false, coins:30, bornAt:Date.now(), lastTick:Date.now(), mailPending:true, itemsOwned:[], andarAtivo:false, }; }
 function loadState(){ try{ const raw=localStorage.getItem(SAVE_KEY); if(!raw) return defaultState(); return Object.assign(defaultState(), JSON.parse(raw)); }catch(e){ return defaultState(); } }
 function saveState(){ localStorage.setItem(SAVE_KEY, JSON.stringify(state)); }
 let state=loadState();
 
-function drawSprite(ctx, bitmap, px, offX, offY, color){ ctx.save(); ctx.translate(offX, offY); ctx.fillStyle=color; for(let r=0;r<bitmap.length;r++){ const row=bitmap[r]; for(let c=0;c<row.length;c++){ if(row[c]==='#') ctx.fillRect(c*px, r*px, px, px); } } ctx.restore(); }
-function makeMiniCanvas(spriteId, size){ const cvs=document.createElement('canvas'); cvs.width=size; cvs.height=size; const ctx=cvs.getContext('2d'); const px=size/16; drawSprite(ctx, petSpriteBitmap(spriteId), px, 0, 0, '#2a2f20'); return cvs; }
-let petCtx=null, bounce=false, animTimer=null;
-function startPetAnimation(){ const canvas=document.getElementById('petCanvas'); petCtx=canvas.getContext('2d'); if(animTimer) clearInterval(animTimer); animTimer=setInterval(()=>{ bounce=!bounce; drawPetFrame(); }, 450); drawPetFrame(); }
-function drawPetFrame(){
-  if(!petCtx) return; const canvas=petCtx.canvas; petCtx.clearRect(0,0,canvas.width,canvas.height);
-  const pet=findPet(state.petId);
-  let spriteId='egg';
-  if(pet){ const est=pet.estagios[state.estagio]||pet.estagios[0]; spriteId=est.sprite; }
-  const bitmap=petSpriteBitmap(spriteId); const px=canvas.width/16;
-  let offY=bounce?-4:0; let offX=state.doente?(bounce?-3:3):0;
-  drawSprite(petCtx, bitmap, px, offX, offY, '#2a2f20');
-}
+// ---------- Animação do bichinho (baseada nos frames vindos da Fábrica de Sprites) ----------
+let frameIndex=0, animTimer=null;
 function getCurrentEstagio(){ const pet=findPet(state.petId); if(!pet) return null; return pet.estagios[state.estagio]||pet.estagios[0]; }
+function currentFrames(){ const est=getCurrentEstagio(); return (est && est.frames && est.frames.length) ? est.frames : []; }
+function currentFrameSrc(){ const frames=currentFrames(); return frames.length ? frames[frameIndex % frames.length] : ''; }
+
+function applyFrame(){
+  const src=currentFrameSrc();
+  const petImg=document.getElementById('petImg');
+  const placeholder=document.getElementById('petPlaceholder');
+  if(src){ petImg.style.display='block'; placeholder.style.display='none'; petImg.src=src; }
+  else { petImg.style.display='none'; placeholder.style.display='block'; }
+  petImg.classList.toggle('sick', state.doente);
+  const roam=document.getElementById('roamPet');
+  if(src) roam.src=src;
+}
+
+function startPetAnimation(){
+  if(animTimer) clearInterval(animTimer);
+  frameIndex=0; applyFrame();
+  animTimer=setInterval(()=>{
+    const frames=currentFrames();
+    if(!frames.length) return;
+    frameIndex=(frameIndex+1)%frames.length;
+    applyFrame();
+    document.getElementById('petImg').classList.toggle('bounce');
+  }, 420);
+}
 
 function render(){
   document.getElementById('fomeVal').textContent=String(Math.round(state.fome)).padStart(2,'0');
   document.getElementById('fomeBar').style.width=Math.min(100,state.fome)+'%';
   document.getElementById('carinhoVal').textContent=Math.round(state.carinho)+'%';
   document.getElementById('carinhoBar').style.width=Math.min(100,state.carinho)+'%';
+  document.getElementById('felizVal').textContent=Math.round(state.felicidade)+'%';
   document.getElementById('felizBar').style.width=Math.min(100,state.felicidade)+'%';
   document.getElementById('moedasVal').textContent=state.coins;
-  const days=Math.max(0, Math.floor((Date.now()-state.bornAt)/(1000*60*60*24))); const hours=Math.floor(((Date.now()-state.bornAt)/(1000*60*60))%24);
   document.getElementById('evoVal').textContent='Lv'+(state.estagio+1);
   const pet=findPet(state.petId);
   document.getElementById('petNameBtn').textContent=pet?`${pet.name} • ${getCurrentEstagio()?.nome||''}`:'escolher';
-  if(!petCtx) startPetAnimation(); else drawPetFrame();
+  applyFrame();
   const needs=state.fome>=70||state.doente||state.poop;
   document.getElementById('facetRing').classList.toggle('alarm', needs);
   document.getElementById('poopBadge').style.display=state.poop?'block':'none';
@@ -170,6 +200,7 @@ function checkEvolucao(){
       setTimeout(()=>{
         state.estagio++; state.carinho=0;
         ring.classList.remove('evolving'); overlay.classList.remove('show');
+        startPetAnimation();
         floatMsg(`VIROU ${getCurrentEstagio().nome.toUpperCase()}!`,'var(--success)');
         render();
       }, 1800);
@@ -187,15 +218,80 @@ function renderShop(){ const list=document.getElementById('shopList'); list.inne
 function openMail(){ const body=document.getElementById('mailBody'); if(!state.mailPending){ body.innerHTML=`<div class="letter-card"><div class="letter-emoji">📭</div><div class="letter-text">Caixa vazia por enquanto.</div></div>`; return; } const letter=LETTERS[Math.floor(Math.random()*LETTERS.length)]; body.innerHTML=`<div class="letter-card"><div class="letter-emoji">${letter.emoji}</div><div class="letter-text">${letter.text}</div><button class="claim-btn" id="claimBtn">${letter.coins>0?'Resgatar +'+letter.coins:'Fechar'}</button></div>`; document.getElementById('claimBtn').onclick=()=>{ state.coins+=letter.coins; state.mailPending=false; render(); closeModal('mail'); }; }
 function redeemCode(){ const input=document.getElementById('codeInput'); const code=input.value.trim().toUpperCase(); const result=document.getElementById('codeResult'); const found=CODES[code]; if(found){ state.coins+=found.coins; result.innerHTML=`<div class="code-result code-success">${found.msg}</div>`; render(); } else { result.innerHTML=`<div class="code-result code-error">Código inválido.</div>`; } input.value=''; }
 
-let currentCat='comuns';
-function renderPetSelector(cat){ currentCat=cat; const bar=document.getElementById('petCatBar'); bar.innerHTML=''; Object.keys(PETS).forEach(c=>{ const b=document.createElement('button'); b.textContent=CAT_LABELS[c]; b.className=c===cat?'active':''; b.onclick=()=>renderPetSelector(c); bar.appendChild(b); }); const grid=document.getElementById('petGrid'); grid.innerHTML=''; PETS[cat].forEach(p=>{ const opt=document.createElement('div'); opt.className='pet-opt'+(state.petId===p.id?' selected':''); const mini=makeMiniCanvas(p.estagios[0].sprite, 48); opt.appendChild(mini); const label=document.createElement('span'); label.className='pet-opt-name'; label.textContent=p.name; opt.appendChild(label); opt.onclick=()=>{ state.petId=p.id; state.estagio=0; state.carinho=0; if(!state.bornAt||state.bornAt===0) state.bornAt=Date.now(); render(); closeModal('selector'); floatMsg('bem-vindo!','var(--cyan)'); }; grid.appendChild(opt); }); }
+let currentCat=Object.keys(PETS)[0]||'comuns';
+function renderPetSelector(cat){ currentCat=cat; const bar=document.getElementById('petCatBar'); bar.innerHTML=''; Object.keys(PETS).forEach(c=>{ const b=document.createElement('button'); b.textContent=CAT_LABELS[c]||c; b.className=c===cat?'active':''; b.onclick=()=>renderPetSelector(c); bar.appendChild(b); }); const grid=document.getElementById('petGrid'); grid.innerHTML=''; (PETS[cat]||[]).forEach(p=>{ const opt=document.createElement('div'); opt.className='pet-opt'+(state.petId===p.id?' selected':''); const thumb=document.createElement('img'); const primeiroFrame=p.estagios&&p.estagios[0]&&p.estagios[0].frames&&p.estagios[0].frames[0]; thumb.src=primeiroFrame||''; thumb.alt=p.name; opt.appendChild(thumb); const label=document.createElement('span'); label.className='pet-opt-name'; label.textContent=p.name; opt.appendChild(label); opt.onclick=()=>{ state.petId=p.id; state.estagio=0; state.carinho=0; if(!state.bornAt||state.bornAt===0) state.bornAt=Date.now(); startPetAnimation(); render(); closeModal('selector'); floatMsg('bem-vindo!','var(--cyan)'); }; grid.appendChild(opt); }); }
 
+// ---------- Jogo Caça-Bytes ----------
 let gameCtx, gameRAF, gameRunning=false, gameScore=0, gameTimeLeft=20, items=[], playerX=0.5;
 function setupCanvas(){ const c=document.getElementById('gameCanvas'); c.width=c.clientWidth; c.height=c.clientHeight; gameCtx=c.getContext('2d'); c.onpointermove=(e)=>{ if(!gameRunning) return; const r=c.getBoundingClientRect(); playerX=Math.min(1, Math.max(0, (e.clientX-r.left)/r.width)); }; }
 function startGame(){ if(gameRunning) return; setupCanvas(); gameRunning=true; gameScore=0; gameTimeLeft=20; items=[]; playerX=0.5; document.getElementById('gameStartBtn').textContent='Jogando...'; document.getElementById('gameMsg').textContent=''; const timer=setInterval(()=>{ gameTimeLeft--; document.getElementById('gameTime').textContent='Tempo: '+gameTimeLeft+'s'; if(gameTimeLeft<=0){ clearInterval(timer); endGame(); } },1000); gameLoop(); }
 function endGame(){ gameRunning=false; cancelAnimationFrame(gameRAF); const earned=Math.floor(gameScore/2); state.coins+=earned; state.felicidade=Math.min(100, state.felicidade+Math.min(20, gameScore)); state.carinho=Math.min(100, state.carinho+Math.min(20, gameScore)); document.getElementById('gameMsg').textContent=`Fim! Pontos: ${gameScore} → +${earned} moedas + carinho.`; document.getElementById('gameStartBtn').textContent='Jogar de novo'; checkEvolucao(); render(); }
-function gameLoop(){ const c=document.getElementById('gameCanvas'); const w=c.width,h=c.height; gameCtx.clearRect(0,0,w,h); gameCtx.fillStyle='#020509'; gameCtx.fillRect(0,0,w,h); gameCtx.strokeStyle='rgba(0,229,255,0.15)'; for(let i=0;i<w;i+=24){ gameCtx.beginPath(); gameCtx.moveTo(i,0); gameCtx.lineTo(i,h); gameCtx.stroke(); } if(Math.random()<0.045){ items.push({x:Math.random()*w, y:-10, speed:2+Math.random()*2}); } const pet=findPet(state.petId); const spriteId=pet? (pet.estagios[state.estagio]?.sprite||pet.estagios[0].sprite):'egg'; const bitmap=petSpriteBitmap(spriteId); const px=playerX*w; drawSprite(gameCtx, bitmap, 2.2, px-16*2.2/2, h-40, '#00e5ff'); items.forEach(it=>{ it.y+=it.speed; gameCtx.fillStyle='#ffb300'; gameCtx.beginPath(); gameCtx.arc(it.x, it.y, 7, 0, Math.PI*2); gameCtx.fill(); if(Math.abs(it.x-px)<26 && Math.abs(it.y-(h-30))<26){ it.caught=true; gameScore+=10; document.getElementById('gameScore').textContent='Pontos: '+gameScore; } }); items=items.filter(it=>!it.caught&&it.y<h+20); if(gameRunning) gameRAF=requestAnimationFrame(gameLoop); }
+function gameLoop(){
+  const c=document.getElementById('gameCanvas'); const w=c.width,h=c.height;
+  gameCtx.clearRect(0,0,w,h); gameCtx.fillStyle='#020509'; gameCtx.fillRect(0,0,w,h);
+  gameCtx.strokeStyle='rgba(0,229,255,0.15)';
+  for(let i=0;i<w;i+=24){ gameCtx.beginPath(); gameCtx.moveTo(i,0); gameCtx.lineTo(i,h); gameCtx.stroke(); }
+  if(Math.random()<0.045){ items.push({x:Math.random()*w, y:-10, speed:2+Math.random()*2}); }
+  const gamePetImg=document.getElementById('gamePetImg');
+  gamePetImg.src=currentFrameSrc();
+  gamePetImg.style.left=(playerX*100)+'%';
+  const px=playerX*w;
+  items.forEach(it=>{ it.y+=it.speed; gameCtx.fillStyle='#ffb300'; gameCtx.beginPath(); gameCtx.arc(it.x, it.y, 7, 0, Math.PI*2); gameCtx.fill(); if(Math.abs(it.x-px)<26 && it.y>h-56){ it.caught=true; gameScore+=10; document.getElementById('gameScore').textContent='Pontos: '+gameScore; } });
+  items=items.filter(it=>!it.caught&&it.y<h+20);
+  if(gameRunning) gameRAF=requestAnimationFrame(gameLoop);
+}
 
+// ---------- Modo Tamagotchi: bichinho anda pela tela inteira ----------
+let roamPosX=window.innerWidth/2, roamPosY=window.innerHeight/2, roamDestX=roamPosX, roamDestY=roamPosY;
+let roamCaminhando=false, roamUltimoPasso=0;
+const ROAM_VELOCIDADE=70; // pixels por segundo
+
+function roamEscolherDestino(){
+  const margem=70;
+  roamDestX=margem+Math.random()*(window.innerWidth-margem*2);
+  roamDestY=margem+Math.random()*(window.innerHeight-margem*2);
+}
+function roamAgendarPasseio(){ if(!state.andarAtivo) return; roamEscolherDestino(); roamCaminhando=true; }
+function roamPasso(agora){
+  if(state.andarAtivo && roamCaminhando){
+    if(!roamUltimoPasso) roamUltimoPasso=agora;
+    const dt=(agora-roamUltimoPasso)/1000;
+    roamUltimoPasso=agora;
+    const dx=roamDestX-roamPosX, dy=roamDestY-roamPosY;
+    const dist=Math.sqrt(dx*dx+dy*dy);
+    const roam=document.getElementById('roamPet');
+    if(dist<4){
+      roamCaminhando=false;
+      setTimeout(roamAgendarPasseio, 1200+Math.random()*2000);
+    } else {
+      const passo=ROAM_VELOCIDADE*dt;
+      roamPosX+=(dx/dist)*passo; roamPosY+=(dy/dist)*passo;
+      const flip=dx<0?-1:1;
+      roam.style.left=roamPosX+'px'; roam.style.top=roamPosY+'px';
+      roam.style.transform='translate(-50%,-50%) scaleX('+flip+')';
+    }
+  } else { roamUltimoPasso=0; }
+  requestAnimationFrame(roamPasso);
+}
+requestAnimationFrame(roamPasso);
+
+function aplicarVisualAndar(){
+  const roam=document.getElementById('roamPet');
+  const stage=document.getElementById('stage');
+  const btn=document.getElementById('btnWalk');
+  if(state.andarAtivo){ roam.style.display='block'; stage.classList.add('hidden-for-roam'); btn.classList.add('active'); }
+  else { roam.style.display='none'; stage.classList.remove('hidden-for-roam'); btn.classList.remove('active'); }
+}
+function toggleAndar(){
+  if(!state.petId){ openModal('selector'); return; }
+  state.andarAtivo=!state.andarAtivo;
+  aplicarVisualAndar();
+  if(state.andarAtivo){ roamPosX=window.innerWidth/2; roamPosY=window.innerHeight/2; roamAgendarPasseio(); }
+  saveState();
+}
+document.getElementById('roamPet').addEventListener('pointerdown', ()=>{ petTap(); });
+
+// ---------- Modais e botões ----------
 function openModal(name){ document.getElementById('modal-'+name).classList.add('show'); if(name==='mail') openMail(); if(name==='selector') renderPetSelector(currentCat); if(name==='codes'){ document.getElementById('codeResult').innerHTML=''; } }
 function closeModal(name){ document.getElementById('modal-'+name).classList.remove('show'); if(name==='game'){ gameRunning=false; cancelAnimationFrame(gameRAF); document.getElementById('gameStartBtn').textContent='Começar'; } }
 document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>closeModal(b.dataset.close));
@@ -208,10 +304,13 @@ document.getElementById('btnShop').onclick=()=>openModal('shop');
 document.getElementById('btnMed').onclick=()=>giveMedicine();
 document.getElementById('btnMail').onclick=()=>openModal('mail');
 document.getElementById('btnCodes').onclick=()=>openModal('codes');
+document.getElementById('btnWalk').onclick=()=>toggleAndar();
 document.getElementById('lcdShell').onclick=()=>petTap();
 document.getElementById('gameStartBtn').onclick=()=>startGame();
 document.getElementById('codeSubmit').onclick=()=>redeemCode();
 
+if(state.petId) startPetAnimation();
+aplicarVisualAndar();
 if(!state.petId){ setTimeout(()=>openModal('selector'), 400); }
 render(); tick();
 </script>
